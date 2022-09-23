@@ -18,10 +18,10 @@ var (
 
 // Regression is the exposed data structure for interacting with the API.
 type Regression struct {
-	data              []DataPoint
+	Data              []DataPoint
 	coeff             map[int]float64
 	R2                float64
-	Varianceobserved  float64
+	VarianceObserved  float64
 	VariancePredicted float64
 	initialised       bool
 	crosses           []featureCross
@@ -65,8 +65,8 @@ func (r *Regression) AddCross(cross featureCross) {
 
 // Train the regression with some data points.
 func (r *Regression) Train(d ...DataPoint) {
-	r.data = append(r.data, d...)
-	if len(r.data) > 2 {
+	r.Data = append(r.Data, d...)
+	if len(r.Data) > 2 {
 		r.initialised = true
 	}
 }
@@ -77,7 +77,7 @@ func (r *Regression) applyCrosses() {
 	if len(r.crosses) == 0 {
 		return
 	}
-	for _, p := range r.data {
+	for _, p := range r.Data {
 		if len(p.Crosses) > 0 {
 			continue
 		}
@@ -100,8 +100,8 @@ func (r *Regression) Run() error {
 	r.applyCrosses()
 	r.Ready = true
 
-	observations := len(r.data)
-	numOfvars := len(r.data[0].Variables) + len(r.data[0].Crosses)
+	observations := len(r.Data)
+	numOfvars := len(r.Data[0].Variables) + len(r.Data[0].Crosses)
 
 	if observations < (numOfvars + 1) {
 		return ErrTooManyVars
@@ -112,13 +112,13 @@ func (r *Regression) Run() error {
 	variables := mat.NewDense(observations, numOfvars+1, nil)
 
 	for i := 0; i < observations; i++ {
-		observed.Set(i, 0, r.data[i].Observed)
+		observed.Set(i, 0, r.Data[i].Observed)
 		variables.Set(i, 0, 1)
-		for j, val := range r.data[i].Variables {
+		for j, val := range r.Data[i].Variables {
 			variables.Set(i, j+1, val)
 		}
-		for j, val := range r.data[i].Crosses {
-			variables.Set(i, len(r.data[i].Variables)+j, val)
+		for j, val := range r.Data[i].Crosses {
+			variables.Set(i, len(r.Data[i].Variables)+j, val)
 		}
 	}
 
@@ -177,33 +177,33 @@ func (r *Regression) GetCoeffs() []float64 {
 }
 
 func (r *Regression) calcPredicted() {
-	observations := len(r.data)
+	observations := len(r.Data)
 	for i := 0; i < observations; i++ {
-		r.data[i].Predicted, _ = r.Predict(r.data[i].Variables)
-		r.data[i].Error = r.data[i].Predicted - r.data[i].Observed
+		r.Data[i].Predicted, _ = r.Predict(r.Data[i].Variables)
+		r.Data[i].Error = r.Data[i].Predicted - r.Data[i].Observed
 	}
 }
 
 func (r *Regression) calcVariance() {
-	observations := len(r.data)
+	observations := len(r.Data)
 	var obtotal, prtotal, obvar, prvar float64
 	for i := 0; i < observations; i++ {
-		obtotal += r.data[i].Observed
-		prtotal += r.data[i].Predicted
+		obtotal += r.Data[i].Observed
+		prtotal += r.Data[i].Predicted
 	}
 	obaverage := obtotal / float64(observations)
 	praverage := prtotal / float64(observations)
 
 	for i := 0; i < observations; i++ {
-		obvar += math.Pow(r.data[i].Observed-obaverage, 2)
-		prvar += math.Pow(r.data[i].Predicted-praverage, 2)
+		obvar += math.Pow(r.Data[i].Observed-obaverage, 2)
+		prvar += math.Pow(r.Data[i].Predicted-praverage, 2)
 	}
-	r.Varianceobserved = obvar / float64(observations)
+	r.VarianceObserved = obvar / float64(observations)
 	r.VariancePredicted = prvar / float64(observations)
 }
 
 func (r *Regression) calcR2() {
-	r.R2 = r.VariancePredicted / r.Varianceobserved
+	r.R2 = r.VariancePredicted / r.VarianceObserved
 }
 
 // MakeDataPoints makes a `[]DataPoint` from a `[][]float64`. The expected fomat for the input is a row-major [][]float64.

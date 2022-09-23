@@ -1,43 +1,37 @@
 package regression
 
 import (
-	"fmt"
 	"math"
 	"testing"
 )
 
 func TestRun(t *testing.T) {
-	r := new(Regression)
-	r.SetObserved("Murders per annum per 1,000,000 inhabitants")
-	r.SetVar(0, "Inhabitants")
-	r.SetVar(1, "Percent with incomes below $5000")
-	r.SetVar(2, "Percent unemployed")
+	r := &Regression{}
+	// Observed : Murders per annum per 1,000,000 inhabitants
+	// Variables : Inhabitants, Percent with incomes below $5000, Percent unemployed
 	r.Train(
-		DataPoint(11.2, []float64{587000, 16.5, 6.2}),
-		DataPoint(13.4, []float64{643000, 20.5, 6.4}),
-		DataPoint(40.7, []float64{635000, 26.3, 9.3}),
-		DataPoint(5.3, []float64{692000, 16.5, 5.3}),
-		DataPoint(24.8, []float64{1248000, 19.2, 7.3}),
-		DataPoint(12.7, []float64{643000, 16.5, 5.9}),
-		DataPoint(20.9, []float64{1964000, 20.2, 6.4}),
-		DataPoint(35.7, []float64{1531000, 21.3, 7.6}),
-		DataPoint(8.7, []float64{713000, 17.2, 4.9}),
-		DataPoint(9.6, []float64{749000, 14.3, 6.4}),
-		DataPoint(14.5, []float64{7895000, 18.1, 6}),
-		DataPoint(26.9, []float64{762000, 23.1, 7.4}),
-		DataPoint(15.7, []float64{2793000, 19.1, 5.8}),
-		DataPoint(36.2, []float64{741000, 24.7, 8.6}),
-		DataPoint(18.1, []float64{625000, 18.6, 6.5}),
-		DataPoint(28.9, []float64{854000, 24.9, 8.3}),
-		DataPoint(14.9, []float64{716000, 17.9, 6.7}),
-		DataPoint(25.8, []float64{921000, 22.4, 8.6}),
-		DataPoint(21.7, []float64{595000, 20.2, 8.4}),
-		DataPoint(25.7, []float64{3353000, 16.9, 6.7}),
+		DataPoint{Observed: 11.2, Variables: []float64{587000, 16.5, 6.2}},
+		DataPoint{Observed: 13.4, Variables: []float64{643000, 20.5, 6.4}},
+		DataPoint{Observed: 40.7, Variables: []float64{635000, 26.3, 9.3}},
+		DataPoint{Observed: 5.3, Variables: []float64{692000, 16.5, 5.3}},
+		DataPoint{Observed: 24.8, Variables: []float64{1248000, 19.2, 7.3}},
+		DataPoint{Observed: 12.7, Variables: []float64{643000, 16.5, 5.9}},
+		DataPoint{Observed: 20.9, Variables: []float64{1964000, 20.2, 6.4}},
+		DataPoint{Observed: 35.7, Variables: []float64{1531000, 21.3, 7.6}},
+		DataPoint{Observed: 8.7, Variables: []float64{713000, 17.2, 4.9}},
+		DataPoint{Observed: 9.6, Variables: []float64{749000, 14.3, 6.4}},
+		DataPoint{Observed: 14.5, Variables: []float64{7895000, 18.1, 6}},
+		DataPoint{Observed: 26.9, Variables: []float64{762000, 23.1, 7.4}},
+		DataPoint{Observed: 15.7, Variables: []float64{2793000, 19.1, 5.8}},
+		DataPoint{Observed: 36.2, Variables: []float64{741000, 24.7, 8.6}},
+		DataPoint{Observed: 18.1, Variables: []float64{625000, 18.6, 6.5}},
+		DataPoint{Observed: 28.9, Variables: []float64{854000, 24.9, 8.3}},
+		DataPoint{Observed: 14.9, Variables: []float64{716000, 17.9, 6.7}},
+		DataPoint{Observed: 25.8, Variables: []float64{921000, 22.4, 8.6}},
+		DataPoint{Observed: 21.7, Variables: []float64{595000, 20.2, 8.4}},
+		DataPoint{Observed: 25.7, Variables: []float64{3353000, 16.9, 6.7}},
 	)
 	r.Run()
-
-	fmt.Printf("Regression formula:\n%v\n", r.Formula)
-	fmt.Printf("Regression:\n%s\n", r)
 
 	// All vars are known to positively correlate with the murder rate
 	for i, c := range r.coeff {
@@ -57,27 +51,19 @@ func TestRun(t *testing.T) {
 }
 
 func TestCrossApply(t *testing.T) {
-	r := new(Regression)
-	r.SetObserved("Input-Squared plus Input")
-	r.SetVar(0, "Input")
+	r := &Regression{}
 	r.Train(
-		DataPoint(6, []float64{2}),
-		DataPoint(20, []float64{4}),
-		DataPoint(30, []float64{5}),
-		DataPoint(72, []float64{8}),
-		DataPoint(156, []float64{12}),
+		DataPoint{Observed: 6, Variables: []float64{2}},
+		DataPoint{Observed: 20, Variables: []float64{4}},
+		DataPoint{Observed: 30, Variables: []float64{5}},
+		DataPoint{Observed: 72, Variables: []float64{8}},
+		DataPoint{Observed: 156, Variables: []float64{12}},
 	)
 	r.AddCross(PowCross(0, 2))
 	r.AddCross(PowCross(0, 7))
 	err := r.Run()
 	if err != nil {
 		t.Error(err)
-	}
-
-	fmt.Printf("Regression formula:\n%v\n", r.Formula)
-	fmt.Printf("Regression:\n%s\n", r)
-	if r.names.vars[1] != "(Input)^2" {
-		t.Error("Name incorrect")
 	}
 
 	for i, c := range r.coeff {
@@ -170,7 +156,7 @@ func TestGetCoeffs(t *testing.T) {
 		{1518, 9, 58},
 	}
 
-	r := new(Regression)
+	r := &Regression{}
 	r.Train(MakeDataPoints(a, 0)...)
 	r.Run()
 

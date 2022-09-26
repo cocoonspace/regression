@@ -1,6 +1,6 @@
 regression
 =======
-[![GoDoc](https://pkg.go.dev/github.com/cocoonspace/regression?status.svg)](https://pkg.go.dev/github.com/cocoonspace/regression)
+[![Go Reference](https://pkg.go.dev/badge/github.com/cocoonspace/regression.svg)](https://pkg.go.dev/github.com/cocoonspace/regression)
 [![Go Report Card](https://goreportcard.com/badge/cocoonspace/regression)](https://goreportcard.com/report/cocoonspace/regression)
 [![Build Status](https://travis-ci.org/sajari/regression.svg?branch=master)](https://travis-ci.org/sajari/regression)
 [![License][license-image]][license-url]

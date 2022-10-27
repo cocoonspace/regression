@@ -13,7 +13,7 @@ jobs:
           failfast: true
           race: true
 orbs:
-  go: circleci/go@x.y
+  go: circleci/go@1.7.1
 version: 2.1
 workflows:
   main:

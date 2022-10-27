@@ -1,4 +1,4 @@
-module pkgs/regression
+module github.com/cocoonspace/regression
 
 go 1.17
 

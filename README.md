@@ -1,8 +1,8 @@
 regression
 =======
 [![Go Reference](https://pkg.go.dev/badge/github.com/cocoonspace/regression.svg)](https://pkg.go.dev/github.com/cocoonspace/regression)
-[![Go Report Card](https://goreportcard.com/badge/cocoonspace/regression)](https://goreportcard.com/report/cocoonspace/regression)
-[![Build Status](https://travis-ci.org/sajari/regression.svg?branch=master)](https://travis-ci.org/sajari/regression)
+[![Go Report Card](https://goreportcard.com/badge/github.com/cocoonspace/regression)](https://goreportcard.com/report/github.com/cocoonspace/regression)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/cocoonspace/regression/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/cocoonspace/regression/tree/master)
 [![License][license-image]][license-url]
 
 [license-image]: http://img.shields.io/badge/license-MIT-green.svg?style=flat-square
